@@ -20,7 +20,7 @@
       lineinfile:
         path: ~/.profile
         line: source ~/.nvm/nvm.sh # This will make sure Node is on the user's PATH
-        create: yes
+        create: true
 
     - name: Install node
       shell: |
@@ -42,7 +42,7 @@
           repo: "https://github.com/Kostas-Xafis/DtstProjectFrontend.git"
           dest: "{{ frontend_app_dir }}"
           version: "{{ branch }}"
-          force: yes
+          force: true
 
     - name: "Install dependencies & Build the website"
       shell: "export PATH=$PATH:~/.nvm/versions/node/v20.12.1/bin ; npm install ; npm run build"
