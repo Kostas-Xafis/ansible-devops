@@ -14,6 +14,17 @@
             state: present
         become: true
 
+  tasks:
+      - name: Clone the Spring repository
+        git:
+            repo: "https://github.com/Kostas-Xafis/Dtst-2.git"
+            dest: "{{ backend_app_dir }}"
+            version: "{{ branch }}"
+            update: true
+            force: true
+        become: true
+        become_user: "{{ appuser }}"
+
       - name: "Store environment variables"
         lineinfile:
           dest: "{{ backend_app_dir }}/.spring-env"
@@ -23,22 +34,6 @@
           create: true
         with_items:
           - "{{app.env | dict2items}}"
-
-  tasks:
-      - name: Clone the Spring repository
-        git:
-            repo: "https://github.com/Kostas-Xafis/Dtst-2.git"
-            dest: "{{ backend_app_dir }}/temp"
-            clone: true
-            version: "{{ branch }}"
-            force: true
-        become: true
-        become_user: "{{ appuser }}"
-
-      - name: Move backend files
-        shell: "mv {{ backend_app_dir }}/temp/* {{ backend_app_dir }}/temp/.*  {{ backend_app_dir }}"
-        become: true
-        become_user: "{{ appuser }}"
 
       - name: "Build the Spring application"
         command: "./mvnw package -Dmaven.test.skip"
