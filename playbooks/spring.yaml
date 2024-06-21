@@ -28,10 +28,15 @@
       - name: Clone the Spring repository
         git:
             repo: "https://github.com/Kostas-Xafis/Dtst-2.git"
-            dest: "{{ backend_app_dir }}"
+            dest: "{{ backend_app_dir }}/temp"
             clone: true
             version: "{{ branch }}"
             force: true
+        become: true
+        become_user: "{{ appuser }}"
+
+      - name: Move backend files
+        shell: "mv {{ backend_app_dir }}/temp/* {{ backend_app_dir }}"
         become: true
         become_user: "{{ appuser }}"
 
