@@ -3,7 +3,7 @@ backend_app_dir: "{{ app_dir }}/Dtst/backend"
 
 app:
   env:
-    DatabaseURL: "postgresql://devops-db-vm:5432/dtst?user=pgloader&password=password123"
+    DatabaseURL: "postgresql://localhost:5432/dtst?user=pgloader&password=password123"
     DatabasePassword: "password123"
     AdminSecret: "SGUgaGFkIGRlY2lkZWQgdG8gYWNjZXB0IGhpcyBmYXRlIG9mIGFjY2VwdGluZyBoaXMgZmF0ZS4gWW91IGJpdGUgdXAgYmVjYXVzZSBvZiB5b3VyIGxvd2VyIGphdyBUaGV5IGRpZCBub3RoaW5nIGFzIHRoZSByYWNjb29uIGF0dGFja2VkIHRoZSBsYWR5cyBiYWcgb2YgZm9vZC4"
     jwtSecret: "bHVsekRpc0FTZWtyZXRLZXlMaWtlRG9udFRlbGxBbnlub25lSUFpbnRQbGF5aW5XaXRoWW9DYXBBbHJpZ2h0P1N0b3BQbGF5aW5XaXRoTWUhSW1Gcm9tVGhlSG9vZC5DZXJ0aWZpZWROb0NhcA=="
