@@ -26,7 +26,7 @@
           - "{{app.env | dict2items}}"
 
   tasks:
-      - name: "Clone the Spring repository"
+      - name: Clone the Spring repository
         git:
             repo: "https://github.com/Kostas-Xafis/Dtst-2.git"
             dest: "{{ backend_app_dir }}"
@@ -54,13 +54,6 @@
           enabled: yes
         become: true
       
-      - name: "Load database dummies"
-        community.postgresql.postgresql_script:
-          db: "{{ db.name }}"
-          login_user: "{{ db.user }}"
-          login_password: "{{ db.password }}"
-          path: "{{ backend_app_dir }}/dummies.sql"
-
   handlers:
     - name: "Restart Spring"
       service:
