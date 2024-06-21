@@ -1,0 +1,7 @@
+app_dir: "/home/kostas"
+
+backend_app_port: 8000
+frontend_app_port: 7000
+
+appuser: "kostas"
+appgroup: "kostas"

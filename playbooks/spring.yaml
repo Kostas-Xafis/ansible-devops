@@ -1,0 +1,69 @@
+---
+- hosts: "app_servers"
+  pre_tasks:
+      - name: Install Java 17
+        apt:
+            name: openjdk-17-jdk
+            state: present
+            update_cache: yes
+        become: true
+
+      - name: Install Maven
+        apt:
+            name: maven
+            state: present
+            update_cache: yes
+        become: true
+
+      - name: "Store environment variables"
+        lineinfile:
+          dest: "{{ backend_app_dir }}/.spring-env"
+          state: present
+          regexp: "^{{item.key}}="
+          line: "{{item.key}}={{item.value}}"
+          create: true
+        with_items:
+          - "{{app.env | dict2items}}"
+
+  tasks:
+      - name: "Clone the Spring repository"
+        git:
+            repo: "https://github.com/Kostas-Xafis/Dtst-2.git"
+            dest: "{{ backend_app_dir }}"
+            version: "{{ branch }}"
+            force: yes
+
+      - name: "Build the Spring application"
+        command: "./mvnw package -Dmaven.test.skip"
+        args:
+            chdir: "{{ backend_app_dir }}"
+
+      - name: Copy spring service file
+        template:
+          src: ../files/spring.service.j2
+          dest: "/etc/systemd/system/spring.service"
+        become: true
+        become_user: root
+        notify: 
+          - "Restart Spring"
+
+      - name: "Ensure spring service started"
+        service:
+          name: spring
+          state: started
+          enabled: yes
+        become: true
+      
+      - name: "Load database dummies"
+        community.postgresql.postgresql_script:
+          db: "{{ db.name }}"
+          login_user: "{{ db.user }}"
+          login_password: "{{ db.password }}"
+          path: "{{ backend_app_dir }}/dummies.sql"
+
+  handlers:
+    - name: "Restart Spring"
+      service:
+        name: spring
+        state: restarted
+      become: true

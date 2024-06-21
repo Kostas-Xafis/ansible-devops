@@ -1,0 +1,8 @@
+branch: "main"
+frontend_app_dir: "{{ app_dir }}/Dtst/frontend"
+
+service:
+  working_dir: "{{ frontend_app_dir }}"
+  execstart: "npm run preview"
+
+site_location: "/var/www/html"

@@ -1,0 +1,4 @@
+db:
+  name: "dtst"
+  user: "pgloader"
+  password: "password123"
