@@ -32,11 +32,15 @@
             dest: "{{ backend_app_dir }}"
             version: "{{ branch }}"
             force: yes
+        become: true
+        become_user: "{{ appuser }}"
 
       - name: "Build the Spring application"
         command: "./mvnw package -Dmaven.test.skip"
         args:
             chdir: "{{ backend_app_dir }}"
+        become: true
+        become_user: "{{ appuser }}"
 
       - name: Copy spring service file
         template:
