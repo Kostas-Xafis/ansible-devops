@@ -1,5 +1,5 @@
 ---
-- hosts: "app_servers"
+- hosts: app_servers
   pre_tasks:
       - name: Install Java 17
         apt:

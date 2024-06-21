@@ -8,12 +8,16 @@ control:
 
 app_servers:
     hosts:
+        jenkins-server-vm:
+            ansible_host: appserver
         gcloud-frontend-server:
-            ansible_host: devops-vm
+            ansible_host: devops-f-vm
         gcloud-backend-server:
-            ansible_host: devops-vm
+            ansible_host: devops-b-vm
 
 postgres:
     hosts:
         gcloud-db-vm:
-            ansible_host: devops-vm
+            ansible_host: devops-db-vm
+        jenkins-db-vm:
+            ansible_host: appserver
