@@ -36,7 +36,7 @@
         become_user: "{{ appuser }}"
 
       - name: Move backend files
-        shell: "mv {{ backend_app_dir }}/temp/* {{ backend_app_dir }}"
+        shell: "mv {{ backend_app_dir }}/temp/* {{ backend_app_dir }}/temp/.*  {{ backend_app_dir }}"
         become: true
         become_user: "{{ appuser }}"
 
