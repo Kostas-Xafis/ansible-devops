@@ -1,0 +1,12 @@
+- name: Install Java 17
+  apt:
+      name: openjdk-17-jdk
+      state: present
+      update_cache: true
+  become: true
+
+- name: Install Maven
+  apt:
+      name: maven
+      state: present
+  become: true

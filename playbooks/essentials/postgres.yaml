@@ -1,0 +1,15 @@
+- name: Install the PostgreSQL package
+  apt:
+    name: ["postgresql-contrib", "postgresql-client"]
+    state: present  
+    update_cache: true
+
+- name: install pip3
+  apt:
+    name: ["python3-pip"]
+    state: present
+
+- name: "Install Python packages"
+  pip: "name={{ item }}  state=present"
+  with_items:
+    - psycopg2-binary

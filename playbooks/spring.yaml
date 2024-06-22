@@ -1,18 +1,23 @@
 ---
 - hosts: app_servers
-  pre_tasks:
-      - name: Install Java 17
-        apt:
-            name: openjdk-17-jdk
-            state: present
-            update_cache: true
-        become: true
 
-      - name: Install Maven
-        apt:
-            name: maven
-            state: present
-        become: true
+  pre_tasks:
+    - name: Check if Spring essentials are installed
+      shell: "java --version && mvn -v"
+      register: spring_essentials
+      ignore_errors: true
+
+    - name: Set Spring installed fact
+      set_fact:
+        spring_installed: "{{ spring_essentials.rc == 0 }}"
+
+    - name: Install the Spring essentials if not installed
+      include_tasks: essentials/spring.yaml
+      when: not spring_installed
+    
+    - name: Force update
+      include_tasks: essentials/spring.yaml
+      when: "spring_installed and {{ force_update }} == true"
 
   tasks:
       - name: Clone the Spring repository

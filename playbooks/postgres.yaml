@@ -4,33 +4,34 @@
   become_user: root
 
   pre_tasks:
-    - name: Install the PostgreSQL package
-      apt:
-        name: ["postgresql-contrib", "postgresql-client"]
-        state: present  
-        update_cache: true
+    - name: Check if PostgreSQL essentials are installed
+      shell: "psql --version && python3 --version && pip3 --version && pip3 show psycopg2-binary"
+      register: postgres_essentials
+      ignore_errors: true
 
-    - name: install pip3
-      apt:
-        name: ["python3-pip"]
-        state: present
+    - name: Set PostgreSQL installed fact
+      set_fact:
+        postgres_installed: "{{ postgres_essentials.rc == 0 }}"
 
-    - name: "Install Python packages"
-      pip: "name={{ item }}  state=present"
-      with_items:
-        - psycopg2-binary
-
+    - name: Install the PostgreSQL essentials if not installed
+      include_tasks: essentials/postgres.yaml
+      when: not postgres_installed
+    
+    - name: Force update
+      include_tasks: essentials/postgres.yaml
+      when: "postgres_installed and {{ force_update }} == true"
   tasks:
-    - name: check if postgres is initialized
+
+    - name: Check if postgres is initialized
       ansible.builtin.stat:
         path: /var/lib/postgresql/14/main
       register: postgres_data
 
-    - name: "Initialize PostgreSQL"
+    - name: Initialize PostgreSQL
       shell: "postgresql-setup initdb"
       when: not postgres_data.stat.exists
 
-    - name: "Start and enable services"
+    - name: Start and enable services
       service: "name={{ item }} state=started enabled=true"
       with_items:
         - postgresql
@@ -41,7 +42,6 @@
         name: "{{ db.name }}"
       become: true
       become_user: postgres
-
 
     - name: "Create db user"
       postgresql_user:
