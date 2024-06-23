@@ -1,0 +1,51 @@
+services:
+  pgdb:
+    image: postgres:16
+    expose:
+      - 5432
+    ports:
+      - "5432:5432"
+    restart: always
+    env_file:
+      - path: "./env/.docker-postgres.env"
+        required: true
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -d dtst -U pgloader
+      interval: 30s
+      timeout: 30s
+      retries: 3
+    volumes:
+      - 'dtstdb:/var/lib/postgresql/data/'
+
+  spring:
+    image: sp
+    build:
+      context: https://github.com/Kostas-Xafis/Dtst-2.git#main
+    ports:
+      - "8000:8000"
+    depends_on:
+      - pgdb
+    env_file:
+      - path: "./env/.docker-spring.env"
+        required: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/actuator/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
+  frontend:
+    image: fr
+    build:
+      context: https://github.com/Kostas-Xafis/DtstProjectFrontend.git#main
+    environment:
+      - VITE_BACKEND_URL="http://spring:8000/"
+    ports:
+      - "80:80"
+    depends_on:
+      - spring
+
+volumes:
+    dtstdb:

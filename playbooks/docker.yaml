@@ -1,0 +1,47 @@
+---
+- hosts: docker
+  become: true
+  become_user: root
+
+  pre_tasks:
+    - name: Check if Docker essentials are installed
+      shell: "docker -v && docker compose version"
+      register: docker_essentials
+      ignore_errors: true
+
+    - name: Set Docker installed fact
+      set_fact:
+        docker_installed: "{{ docker_essentials.rc == 0 }}"
+
+    - name: Install the Docker essentials if not installed
+      include_tasks: essentials/docker.yaml
+      when: not docker_installed
+    
+    - name: Force update
+      include_tasks: essentials/docker.yaml
+      when: "docker_installed and {{ force_update }} == true"
+
+  tasks:
+    - name: Start docker service
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Adding existing user to group docker
+      user:
+        name: "{{ ansible_user_id }}"
+        groups: docker
+        append: yes
+    
+    - name: Copy docker compose files
+      copy:
+        src: "docker/"
+        dest: "{{ docker_dir }}/"
+    
+    - name: Compose up
+      command: "docker compose up --build -d"
+      args:
+        chdir: "{{ docker_dir }}/"
+      become: true
+      become_user: root
