@@ -38,17 +38,6 @@
       copy:
         src: "docker/"
         dest: "{{ docker_dir }}/"
-        decrypt: false
-
-    - name: Copy vault password file
-      copy:
-        src: "../.vault_pass"
-        dest: "{{ docker_dir }}/"
-
-    - name: Decryprt docker compose env files
-      shell: "ansible-vault decrypt {{ docker_dir }}/{{ item }} --vault-password-file {{ docker_dir }}/.vault_pass"
-      with_items: 
-        - "./env/.docker*.env"
     
     - name: Compose up
       command: "docker compose up --build -d"
@@ -57,8 +46,8 @@
       become: true
       become_user: root
     
-    - name: Remove decrypted env & vault password file
-      shell: "rm -rf {{ docker_dir }}/env {{ docker_dir }}/.vault_pass"
+    - name: Remove decrypted env files
+      shell: "rm -rf {{ docker_dir }}/env"
       become: true
       become_user: root
 

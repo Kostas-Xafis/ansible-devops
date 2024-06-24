@@ -10,7 +10,7 @@
 *.pub
 *.log
 *.sh
-.vault_pass
+*.txt
 # Certificates
 *.crt
 *.key
