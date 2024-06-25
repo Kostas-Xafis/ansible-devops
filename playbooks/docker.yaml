@@ -40,7 +40,7 @@
         dest: "{{ docker_dir }}/"
     
     - name: Compose up
-      command: "docker compose up --build -d"
+      command: "docker compose stop {{ docker_services }} && docker compose up --build -d {{ docker_services }}"
       args:
         chdir: "{{ docker_dir }}/"
       become: true
@@ -50,4 +50,3 @@
       shell: "rm -rf {{ docker_dir }}/env"
       become: true
       become_user: root
-

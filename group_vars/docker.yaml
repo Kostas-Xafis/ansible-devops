@@ -1,2 +1,3 @@
 docker_dir: "{{ ansible_user_dir }}/docker"
 force_update: false
+docker_services: "pgdb spring frontend"
