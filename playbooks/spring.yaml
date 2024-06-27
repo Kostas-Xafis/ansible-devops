@@ -38,7 +38,7 @@
           line: "{{item.key}}={{item.value}}"
           create: true
         with_items:
-          - "{{app.env | dict2items}}"
+          - "{{ app.env | dict2items }}"
 
       - name: "Build the Spring application"
         command: "./mvnw package -Dmaven.test.skip"
