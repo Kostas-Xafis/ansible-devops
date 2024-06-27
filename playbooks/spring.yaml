@@ -23,7 +23,7 @@
       - name: Clone the Spring repository
         git:
             repo: "https://github.com/Kostas-Xafis/Dtst-2.git"
-            dest: "{{ backend_app_dir }}"
+            dest: "{{ backend_server_dir }}"
             version: "{{ branch }}"
             update: true
             force: true
@@ -32,7 +32,7 @@
 
       - name: "Store environment variables"
         lineinfile:
-          dest: "{{ backend_app_dir }}/.spring-env"
+          dest: "{{ backend_server_dir }}/.spring-env"
           state: present
           regexp: "^{{item.key}}="
           line: "{{item.key}}={{item.value}}"
@@ -43,7 +43,7 @@
       - name: "Build the Spring application"
         command: "./mvnw package -Dmaven.test.skip"
         args:
-            chdir: "{{ backend_app_dir }}"
+            chdir: "{{ backend_server_dir }}"
         become: true
         become_user: "{{ appuser }}"
 

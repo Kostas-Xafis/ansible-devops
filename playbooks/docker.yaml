@@ -38,14 +38,22 @@
       copy:
         src: "docker/"
         dest: "{{ docker_dir }}/"
-    
+
+    - name: Replace VITE_BACKEND_URL in .env
+      lineinfile:
+        path: "{{ docker_dir }}/docker-compose.yaml"
+        regexp: "VITE_BACKEND_URL="
+        line: "      - VITE_BACKEND_URL=http://{{ backend_server_host }}:{{ backend_server_port }}/"
+        state: present
+        create: true
+
     - name: Compose up
       shell: "docker compose stop {{ docker_services }} && docker compose up --build -d {{ docker_services }}"
       args:
         chdir: "{{ docker_dir }}/"
       become: true
       become_user: root
-    
+
     - name: Remove decrypted env files
       shell: "rm -rf {{ docker_dir }}/env"
       become: true

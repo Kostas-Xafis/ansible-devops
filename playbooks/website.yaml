@@ -1,9 +1,9 @@
 ---
-- hosts: app_servers
+- hosts: all
 
   pre_tasks:
     - name: Check if Website essentials are installed
-      shell: "nginx -v && node -v && npm -v && git --version"
+      shell: "nginx -v && npm -v && git --version"
       register: website_essentials
       ignore_errors: true
 
@@ -31,6 +31,14 @@
       shell: "export PATH=$PATH:~/.nvm/versions/node/v20.12.1/bin ; npm install ; npm run build"
       args:
         chdir: "{{ frontend_app_dir }}"
+    
+    - name: "Replace VITE_BACKEND_URL in .env"
+      lineinfile:
+        path: "{{ frontend_app_dir }}/.env"
+        regexp: "^VITE_BACKEND_URL="
+        line: "VITE_BACKEND_URL=http://{{ backend_server_host }}:{{ backend_server_port }}/"
+        state: present
+        create: true
 
     - name: "Copy dist in nginx location" 
       copy:

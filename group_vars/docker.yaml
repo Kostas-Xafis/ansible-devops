@@ -1,3 +1,6 @@
 docker_dir: "{{ ansible_user_dir }}/docker"
 force_update: false
+
 docker_services: "pgdb spring frontend"
+backend_server_host: "spring"
+backend_server_port: 8000

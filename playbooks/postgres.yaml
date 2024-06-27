@@ -36,14 +36,14 @@
       with_items:
         - postgresql
 
-    - name: "Create app database"
+    - name: Create app database
       postgresql_db:
         state: present
         name: "{{ db.name }}"
       become: true
       become_user: postgres
 
-    - name: "Create db user"
+    - name: Create db user
       postgresql_user:
           state: present
           name: "{{ db.user }}"
@@ -52,7 +52,7 @@
       become: true
       become_user: postgres
 
-    - name: "Grant db user access to app db"
+    - name: Grant db user access to app db
       postgresql_privs:
         type: database
         database: "{{ db.name }}"
@@ -62,7 +62,7 @@
       become: true
       become_user: postgres
 
-    - name: "Allow password connection for the db user"
+    - name: Allow password connection for the db user
       postgresql_pg_hba:
         dest: "/etc/postgresql/14/main/pg_hba.conf"
         contype: host
@@ -75,7 +75,7 @@
       become_user: postgres
       notify: restart postgres
 
-    - name: "Allow connections from all"
+    - name: Allow connections from all
       lineinfile:
         path: "/etc/postgresql/14/main/postgresql.conf"
         line: "listen_addresses = '*'"
