@@ -9,7 +9,6 @@
 .vagrant
 *.pub
 *.log
-*.sh
 *.txt
 # Certificates
 *.crt
