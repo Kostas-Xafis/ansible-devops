@@ -12,7 +12,7 @@ This project showcases the use of DevOps tools like Ansible, Docker and Jenkins.
 > [!IMPORTANT]
 > 1. **You will need to have setup the ssh config of your machine to connect to the appropriate virtual machines, each specified in [hosts.yaml](https://github.com/Kostas-Xafis/ansible-devops/blob/main/hosts.yaml).**
 >
-> 2. **You'll will also need to decrypty the encrypted files with ansible vault, either at runtime or beforehand.**
+> 2. **You will also need to decrypt the encrypted files with ansible vault, either at runtime or beforehand.**
 >  
 
 # Deployments

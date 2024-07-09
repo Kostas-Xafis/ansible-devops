@@ -16,7 +16,7 @@ app_servers:
 postgres:
     hosts:
         gcloud-db-server:
-            ansible_host: devops-db-vm
+            ansible_host: devops-b-vm
 
 docker:
     hosts:
